@@ -5,6 +5,10 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server();
 
+const publicPath = path.join(__dirname, "public");
+const port = process.env.PORT || 3000;
+app.use(experss.static(publicPath));
+
 app.get("/", (res, req) => {
   req.send("Hello World!");
 });
@@ -34,5 +38,5 @@ io.of("/").adapter.on("join-room", (room, id) => {
 io.of("/").adapter.on((socket) => {});
 
 server.listen(3000, () => {
-  console.log("listening on *:3000");
+  console.log(`listening on *:${port}`);
 });
