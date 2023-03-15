@@ -15,6 +15,7 @@ export class Player {
       throw new Error(INVALID_PLAYER_NAME_ERROR);
     this.id = id;
     this.name = name;
+    this.room = null;
   }
 
   /**
@@ -31,5 +32,32 @@ export class Player {
    */
   getName() {
     return this.name;
+  }
+
+  /**
+   * Joins a room. Returns true if the join is successful and false if the room is full.
+   * This method also removes the player from the current room.
+   * @param {Room} room the room to join
+   * @returns {bool} true if the join is successful
+   */
+  joinRoom(room) {
+    if (room === null) return false;
+    this.leaveRoom();
+
+    if (!room.addPlayer(this)) return false;
+
+    this.room = room;
+    return true;
+  }
+
+  /**
+   * Leaves the current room. Returns true if the leave is successful and false if the player is not in a room.
+   * @returns {bool} true if the leave is successful.
+   */
+  leaveRoom() {
+    if (this.room === null) return false;
+    this.room.removePlayer(this);
+    this.room = null;
+    return true;
   }
 }

@@ -1,4 +1,10 @@
-import { ROOM_SIZE } from "./constants";
+import {
+  INVALID_ID,
+  INVALID_NAME,
+  INVALID_ROOM_SIZE,
+  ROOM_SIZE,
+} from "./constants";
+import { Game } from "../game/Game";
 
 export class Room {
   /**
@@ -8,26 +14,31 @@ export class Room {
    * @param {number} room_size The size of the room
    */
   constructor(id, name, room_size = ROOM_SIZE) {
+    if (id === undefined || id < 0) throw new Error(INVALID_ID);
+    if (name === undefined || name.length === 0) throw new Error(INVALID_NAME);
+    if (room_size < 2) throw new Error(INVALID_ROOM_SIZE);
     this.id = id;
     this.name = name;
     this.room_size = room_size;
     this.players = [];
     this.game = null;
+    this.is_closed = false;
   }
 
   /**
    * Adds a player. Returns true if the addition is successful and false if the room is full.
    * @param {Player} player the player of the game
-   * @returns bool
+   * @returns {bool}
    */
   addPlayer(player) {
-    if (this.players.length >= this.room_size) return false;
+    if (this.is_closed || this.players.length >= this.room_size) return false;
     this.players.push(player);
 
     // Start the game when there are 2 players
-    if (this.player.length == 2) {
+    if (this.players.length === 2)
       this.game = new Game(this.players[0], this.players[1]);
-    }
+
+    return true;
   }
 
   /**
@@ -36,23 +47,26 @@ export class Room {
    * @returns {bool}
    */
   removePlayer(player) {
-    if (this.players.length <= 0 || !this.players.includes(player))
+    if (
+      this.is_closed ||
+      this.players.length <= 0 ||
+      !this.players.includes(player)
+    )
       return false;
-    this.winner = this.players.find((p) => p !== player);
+    if (this.game !== null && this.game.hasPlayer(player))
+      this.game.endGame(player);
+
+    this.players = this.players.filter((p) => p.id !== player.id);
     this.closeRoom();
     return true;
   }
 
   /**
    * Returns the player with the given id.
-   * @param {string} id the id of the player
-   * @returns Player
-   * @throws Error if the player is not in the room
+   * @returns {Array<Player>} the players in the room
    */
-  getPlayer(id) {
-    const player = this.players.find((p) => p.id === id);
-    if (!player) throw new Error("Player not found");
-    return player;
+  getPlayers() {
+    return this.players;
   }
 
   /**
@@ -60,6 +74,7 @@ export class Room {
    * @returns {void}
    */
   closeRoom() {
-    this.ended = true;
+    for (const player of this.players) this.removePlayer(player);
+    this.is_closed = true;
   }
 }
