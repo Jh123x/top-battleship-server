@@ -282,7 +282,6 @@ describe("Board", () => {
 
     test('should return "false" if all ships have been sunk except one', () => {
       board.placeShip(ship2, 0, 3, true);
-      console.log(board.ships);
       for (let i = 0; i < ship.getSize(); ++i) {
         board.makeGuess(0, i);
       }
