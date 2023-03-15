@@ -1,5 +1,6 @@
 import { Cell } from "./Cell";
 import {
+  BOARD_ALL_SUNK,
   BOARD_INVALID_POSITION,
   BOARD_OUT_OF_BOUNDS,
   BOARD_SIZE,

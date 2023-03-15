@@ -54,7 +54,7 @@ export class Room {
     )
       return false;
     if (this.game !== null && this.game.hasPlayer(player))
-      this.game.endGame(player);
+      this.game.endGameWithLoser(player);
 
     this.players = this.players.filter((p) => p.id !== player.id);
     this.closeRoom();
