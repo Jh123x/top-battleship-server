@@ -74,6 +74,7 @@ export class Room {
    * @returns {void}
    */
   closeRoom() {
+    for (const player of this.players) this.removePlayer(player);
     this.is_closed = true;
   }
 }

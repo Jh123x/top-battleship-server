@@ -137,6 +137,7 @@ describe("Room", () => {
     test("should close the room", () => {
       const room = new Room(1, "room1", 2);
       room.closeRoom();
+      expect(room.players).toEqual([]);
       expect(room.is_closed).toBeTruthy();
     });
   });
